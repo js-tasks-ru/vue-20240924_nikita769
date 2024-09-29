@@ -1,78 +1,87 @@
-import { defineComponent } from 'vue'
-// import { getMeetup } from './meetupsService.ts'
+import { defineComponent, ref, onBeforeMount } from 'vue'
+import { getMeetup } from './meetupsService.ts'
 
 export default defineComponent({
   name: 'SelectedMeetupApp',
 
-  setup() {},
+  setup() {
+    const meetupId = ref(1)
+    const meetupTitle = ref('')
+
+    onBeforeMount(async () => {
+      meetupTitle.value = await getMeetup(meetupId.value).then((meetup) => {
+        return meetup.title
+      })
+    })
+
+    const getMeetupHandler = async (meetupIdProp) => {
+      meetupId.value = meetupIdProp
+      meetupTitle.value = await getMeetup(meetupId.value).then((meetup) => {
+        return meetup.title
+      })
+    }
+
+    const increaseButton = async () => {
+      await getMeetupHandler(meetupId.value + 1)
+    }
+
+    const decreaseButton = async () => {
+      await getMeetupHandler(meetupId.value - 1)
+    }
+
+    return {
+      getMeetupHandler,
+      increaseButton,
+      decreaseButton,
+      meetupId,
+      meetupTitle,
+    }
+  },
 
   template: `
     <div class="meetup-selector">
       <div class="meetup-selector__control">
-        <button class="button button--secondary" type="button" disabled>Предыдущий</button>
+        <button
+          class="button button--secondary"
+          type="button"
+          :disabled="meetupId === 1"
+          @click="decreaseButton"
+        >
+          Предыдущий
+        </button>
 
         <div class="radio-group" role="radiogroup">
-          <div class="radio-group__button">
+          <div v-for="buttonId in 5" :key="buttonId" class="radio-group__button">
             <input
-              id="meetup-id-1"
+              :id="'meetup-id-' + buttonId"
               class="radio-group__input"
               type="radio"
               name="meetupId"
-              value="1"
+              :value="buttonId"
+              :checked="buttonId === meetupId"
+              @click="getMeetupHandler(buttonId)"
             />
-            <label for="meetup-id-1" class="radio-group__label">1</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-2"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="2"
-            />
-            <label for="meetup-id-2" class="radio-group__label">2</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-3"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="3"
-            />
-            <label for="meetup-id-3" class="radio-group__label">3</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-4"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="4"
-            />
-            <label for="meetup-id-4" class="radio-group__label">4</label>
-          </div>
-          <div class="radio-group__button">
-            <input
-              id="meetup-id-5"
-              class="radio-group__input"
-              type="radio"
-              name="meetupId"
-              value="5"
-            />
-            <label for="meetup-id-5" class="radio-group__label">5</label>
+            <label for="meetup-id-1" class="radio-group__label">
+              {{ buttonId }}
+            </label>
           </div>
         </div>
 
-        <button class="button button--secondary" type="button">Следующий</button>
+        <button
+          class="button button--secondary"
+          type="button"
+          :disabled="meetupId === 5"
+          @click="increaseButton"
+        >
+          Следующий
+        </button>
       </div>
 
       <div class="meetup-selector__cover">
         <div class="meetup-cover">
-          <h1 class="meetup-cover__title">Some Meetup Title</h1>
+          <h1 class="meetup-cover__title">{{ meetupTitle }}</h1>
         </div>
       </div>
-
     </div>
   `,
 })
