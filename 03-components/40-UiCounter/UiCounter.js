@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     min: {
       type: Number,
-      default: null,
+      default: 0,
     },
     max: {
       type: Number,
@@ -43,7 +43,7 @@ export default defineComponent({
 
   template: `
     <div class="counter">
-      <UiButton aria-label="Decrement" :disabled="count === min || count === 0" @click="decrement">➖</UiButton>
+      <UiButton aria-label="Decrement" :disabled="count === min" @click="decrement">➖</UiButton>
       <span class="count" data-testid="count">{{ count }}</span>
       <UiButton aria-label="Increment" :disabled="count === max" @click="increment">➕</UiButton>
     </div>
