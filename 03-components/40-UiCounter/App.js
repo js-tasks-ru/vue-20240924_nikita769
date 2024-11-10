@@ -19,17 +19,22 @@ export default defineComponent({
       count2.value = 2
     }
 
+    const update = () => {
+      console.log(11)
+    }
+
     return {
       count1,
       count2,
       reset,
+      update,
     }
   },
 
   template: `
     <div>
       <p style="margin: 1em 0">
-        <UiCounter v-model:count="count1" />
+        <UiCounter v-model:count="count1"  :min="1" :max="3" />
       </p>
       <p style="margin: 1em 0">
         <UiCounter v-model:count="count2" :min="1" :max="3" />
