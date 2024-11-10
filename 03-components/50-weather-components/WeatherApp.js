@@ -17,7 +17,7 @@ export default defineComponent({
   template: `
     <h1 class="title">Погода в Средиземье</h1>
     <div v-for="(card, index) in getWeatherData()" :key="index">
-      <WeatherCard :card-data="card" :weather-condition-icons="WeatherConditionIcons" />
+      <WeatherCard :card-data="card" />
     </div>
   `,
 })
