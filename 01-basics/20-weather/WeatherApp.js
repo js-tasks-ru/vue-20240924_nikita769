@@ -5,7 +5,6 @@ export default defineComponent({
   name: 'WeatherApp',
 
   setup() {
-    console.log(getWeatherData())
     return {
       getWeatherData,
       WeatherConditionIcons,
